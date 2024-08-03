@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser')
 const cors = require('cors')
-const session = require('express-session')
+
 const login = require('./routes/login')
 const app = express();
 const credito= require('./routes/credito')
@@ -26,13 +26,7 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-// Configuración de sesión
-app.use(session({
-  resave: false, 
-  secret: 'hola mundo', 
-  saveUninitialized: true, 
-  cookie: { maxAge: 24 * 60 * 60 * 1000 }
-}))
+
 
 // Definición de rutas
 app.use('/', login)

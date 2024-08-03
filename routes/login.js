@@ -2,12 +2,8 @@ const express= require('express')
 const Router = express.Router()
 console.log('hola desde login')
 const connection= require('./db')
-const session= require('express-session')
-Router.use(session({
-    secret: 'mi_secreto', // Deberías establecer tu propia clave secreta
-    resave: false,
-    saveUninitialized: true
-}));
+
+
 Router.post('/auth', (req, res) => {
     const { usuario, pass } = req.body;
     connection.query('SELECT * FROM admin WHERE usuario=? AND pass=?', [usuario, pass], (err, results) => {
@@ -28,5 +24,5 @@ Router.post('/auth', (req, res) => {
   })
   
 
-module.exports= session.user
+
 module.exports= Router
