@@ -56,7 +56,8 @@ Router.get('/datos_prestamo', (req, res) => {
             return res.json({ 
                 datos: datos, 
                 montoTotal: montoRebajado, 
-                pagoMinimo: pagoMinimoRebajado 
+                pagoMinimo: pagoMinimoRebajado,
+                fechaInicio: fechaInicial 
             });
         } else {
             return res.status(404).json({ error: 'Usuario no encontrado' });
