@@ -30,20 +30,7 @@ const corsOptions = {
 app.use(cors(corsOptions))
 
 // Configuración de conexión a la base de datos
-const connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'tu_usuario',
-  password: 'tu_contraseña',
-  database: 'tu_base_de_datos'
-})
 
-connection.connect(err => {
-  if (err) {
-    console.error('Error al conectar a la base de datos:', err)
-    process.exit(1)
-  }
-  console.log('Conectado a la base de datos')
-})
 
 // Ruta para checar pagos en atraso al cargar la aplicación
 app.get('/', (req, res) => {
