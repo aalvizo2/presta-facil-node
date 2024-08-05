@@ -25,7 +25,7 @@ Router.get('/movimientos', (req, res) => {
 });
 
 
-Router.put('/reducirCaja', async (req, res) => {
+/*Router.put('/reducirCaja', async (req, res) => {
   const { monto } = req.body;
 
   if (!monto || monto <= 0) {
@@ -48,7 +48,7 @@ Router.put('/reducirCaja', async (req, res) => {
       console.error('Error al reducir el monto de caja:', error);
       res.status(500).json({ error: 'Error interno del servidor' });
   }
-});
+});*/
 
 
 Router.get('/prestamos', (req, res) => {

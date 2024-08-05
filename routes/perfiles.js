@@ -81,23 +81,7 @@ Router.post('/actualizarPago', (req, res) => {
     }
 
     // Verificar si el pago está atrasado
-    const today = moment();
-    const fechaPagoMoment = moment(fechaPago, 'DD [de] MMMM [de] YYYY');
-    if (today.date() > 15 || today.date() > 30) {
-      const diasAtraso = today.diff(fechaPagoMoment, 'days');
-
-      // Insertar en la tabla cobranza
-      const insertCobranzaQuery = 'INSERT INTO cobranza (nombre, monto, dias_atraso, nota, fechaPago) VALUES (?, ?, ?, ?, ?)';
-      connection.query(insertCobranzaQuery, [nombre, monto, diasAtraso, `Pago atrasado por ${diasAtraso} días`, today.format('DD [de] MMMM [de] YYYY')], (err) => {
-        if (err) {
-          console.error('Error al registrar la cobranza:', err);
-          return res.status(500).json({ error: 'Error al registrar la cobranza' });
-        }
-        console.log('Cobranza registrada correctamente');
-      });
-    }
-
-    res.json({ message: 'Pago actualizado y cobranza registrada correctamente' });
+    
   });
 });
 
