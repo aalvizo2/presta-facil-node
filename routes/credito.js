@@ -1,7 +1,7 @@
 const express = require('express')
 const Router = express.Router()
 const connection = require('./db')
-const { json } = require('body-parser')
+
 
 Router.use(express.json()) // Middleware para parsear el cuerpo de la solicitud como JSON
 

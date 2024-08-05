@@ -1,9 +1,6 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
-const moment = require('moment') // Asegúrate de importar moment
-const mysql = require('mysql2') // Asegúrate de importar el módulo mysql
-
 const login = require('./routes/login')
 const credito = require('./routes/credito')
 const upload = require('./routes/upload')
@@ -33,14 +30,14 @@ app.use(cors(corsOptions))
 
 
 // Ruta para checar pagos en atraso al cargar la aplicación
-app.get('/', (req, res) => {
+/*app.get('/', (req, res) => {
   connection.query('SELECT * FROM prestamo', (err, data) => {
     if (err) return res.status(500).send('Error al cargar los datos')
 
     const today = moment()
 
     data.forEach(row => {
-      res.json({row})
+      res.send({row})
       const { nombre, monto, fechaPago } = row
       const fechaPagoMoment = moment(fechaPago, 'DD [de] MMMM [de] YYYY')
       
@@ -62,7 +59,7 @@ app.get('/', (req, res) => {
 
     res.json({ message: 'Pagos actualizados y cobranzas registradas correctamente' })
   })
-})
+})*/
 
 // Definición de rutas
 app.use('/', login)
@@ -80,9 +77,9 @@ app.use('/', gastos)
 })*/
 
 // Ruta para evitar que el servidor se duerma en Render
-app.get('/keep-alive', (req, res) => {
+/*app.get('/keep-alive', (req, res) => {
   res.send('Server is alive')
-})
+})*/
 
 // Iniciar el servidor
 const PORT = process.env.PORT || 8080
@@ -90,10 +87,3 @@ app.listen(PORT, () => {
   console.log(`Servidor ejecutándose en el puerto ${PORT}`)
 })
 
-// Mantener el servidor activo en Render
-setInterval(() => {
-  fetch(`http://localhost:${PORT}/keep-alive`)
-    .then(res => res.text())
-    .then(res => console.log(res))
-    .catch(err => console.log('Error keeping alive:', err))
-}, 5 * 60 * 1000) // Cada 5 minutos

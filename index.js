@@ -42,10 +42,6 @@ app.get('/', (req, res) => {
   res.send('Hola Mundo');
 });
 
-// Ruta para evitar que el servidor se duerma en Render
-app.get('/keep-alive', (req, res) => {
-  res.send('Server is alive');
-});
 
 // Iniciar el servidor
 const PORT = process.env.PORT || 8080;
@@ -53,10 +49,3 @@ app.listen(PORT, () => {
   console.log(`Servidor ejecutándose en el puerto ${PORT}`);
 });
 
-// Mantener el servidor activo en Render
-setInterval(() => {
-  fetch(`http://localhost:${PORT}/keep-alive`)
-    .then(res => res.text())
-    .then(res => console.log(res))
-    .catch(err => console.log('Error keeping alive:', err));
-}, 5 * 60 * 1000); // Cada 5 minutos
