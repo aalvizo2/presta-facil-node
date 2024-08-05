@@ -163,4 +163,15 @@ Router.get('/getImages/:clientName', (req, res)=>{
 })
 
 
+Router.delete('/eliminarCliente/:nombre', (req, res)=> {
+  const {nombre}= req.params
+  connection.query('DELETE FROM usuarios WHERE nombre=?', [nombre], (err)=>{
+    connection.query('DELETE FROM documentos WHERE nombre=?', [nombre], (err) =>{
+      if(err) throw err 
+      res.status(200).send('Exito')
+    })
+  })
+})
+
+
 module.exports= Router
