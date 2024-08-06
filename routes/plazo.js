@@ -122,7 +122,7 @@ Router.put('/actualizarEstatus/:cliente', (req, res) => {
             const montoRedondeado= Math.round(montoRebajado)
             const pagoMinimoRebajado = interesProporcional;
 
-            connection.query('INSERT INTO prestamos (nombre, monto, fechaInicio, frecuenciaPago) VALUES (?,?,?,?)', [cliente, montoRebajado, fechaInicio, frecuenciaPago], (err) => {
+            connection.query('INSERT INTO prestamos (nombre, monto, fechaInicio, frecuenciaPago) VALUES (?,?,?,?)', [cliente, montoRebajado, fechaInicial, frecuenciaPago], (err) => {
                 if (err) {
                     console.error('Error insertando datos en prestamos:', err);
                     return res.status(500).send('Error insertando datos en prestamos');

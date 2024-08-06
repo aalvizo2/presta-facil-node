@@ -16,7 +16,9 @@ Router.post('/auth', (req, res) => {
       if (results.length > 0) {
        
         return res.status(200).json({ message: 'Autenticación exitosa' })
-
+        
+        
+        
         
       } else {
         // Credenciales inválidas
