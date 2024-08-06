@@ -4,6 +4,8 @@ const moment = require('moment');
 const connection = require('./db');
 require('moment/locale/es');
 
+moment.locale('es')
+
 Router.get('/datos_prestamo', (req, res) => {
     const nombre = req.query.nombre;
     if (!nombre) {
@@ -70,7 +72,7 @@ Router.get('/datos_prestamo', (req, res) => {
  */
 Router.get('/datosCliente/:cliente', (req, res) => {
     const nombre = req.params.cliente;
-    connection.query('SELECT * FROM usuarios WHERE nombre=?', [nombre], (error, results) => {
+    connection.query('SELECT * FROM usuarios WHERE nombre = ?', [nombre], (error, results) => {
         if (error) {
             console.error("Error al ejecutar la consulta SQL:", error);
             return res.status(500).json({ error: "Error al ejecutar la consulta SQL" });
@@ -79,9 +81,7 @@ Router.get('/datosCliente/:cliente', (req, res) => {
     });
 });
 
-/**
- * Endpoint to update the status of a client.
- */
+// Actualizar estatus del cliente
 Router.put('/actualizarEstatus/:cliente', (req, res) => {
     const cliente = req.params.cliente;
     const { estatus, monto, fechaInicio, frecuenciaPago } = req.body;
@@ -99,7 +99,10 @@ Router.put('/actualizarEstatus/:cliente', (req, res) => {
             // Calcular el monto actualizado
             const interes = 0.1;
             const montoActualizado = monto;
-            const fechaInicial = moment(fechaInicio, 'YYYY-MM-DD');
+            const fechaInicial = moment(fechaInicio, 'D [de] MMMM [del] YYYY', 'es');
+            const fechaFormato= fechaInicial.format('YYYY-MM-DD')
+
+            console.log('fecha con formato', fechaFormato)
             const hoy = moment();
             let proximoPago;
 
@@ -122,7 +125,7 @@ Router.put('/actualizarEstatus/:cliente', (req, res) => {
             const montoRedondeado= Math.round(montoRebajado)
             const pagoMinimoRebajado = interesProporcional;
 
-            connection.query('INSERT INTO prestamos (nombre, monto, fechaInicio, frecuenciaPago) VALUES (?,?,?,?)', [cliente, montoRebajado, fechaInicial, frecuenciaPago], (err) => {
+            connection.query('INSERT INTO prestamos (nombre, monto, fechaInicio, frecuenciaPago) VALUES (?,?,?,?)', [cliente, montoRebajado, fechaFormato, frecuenciaPago], (err) => {
                 if (err) {
                     console.error('Error insertando datos en prestamos:', err);
                     return res.status(500).send('Error insertando datos en prestamos');
@@ -152,6 +155,43 @@ Router.put('/actualizarEstatus/:cliente', (req, res) => {
     } else {
         return res.status(400).send('Estatus inválido');
     }
+});
+
+/**
+ * Endpoint to get the list of clients.
+ */
+Router.get('/listaClientes', (req, res) => {
+    connection.query('SELECT nombre, estado, fechaInicio FROM usuarios', (err, datos) => {
+        if (err) {
+            console.error('Error al buscar clientes:', err);
+            return res.status(500).json({ error: 'Error al buscar clientes' });
+        }
+        return res.json({ datos: datos });
+    });
+});
+
+/**
+ * Endpoint to filter clients based on search criteria.
+ */
+Router.post('/filtrarCliente', (req, res) => {
+    const { buscar } = req.body;
+    connection.query('SELECT * FROM prestamos', (err, results) => {
+        if (err) {
+            console.error('Error al buscar usuarios:', err);
+            return res.status(500).json({ error: 'Error al buscar usuarios' });
+        }
+
+        if (results.length > 0) {
+            const datosFormateados = results.map(cliente => ({
+                ...cliente,
+                fechaInicio: moment(cliente.fechaInicio).format('YYYY-MM-DD'),
+                fechaPago: moment(cliente.fechaPago).format('YYYY-MM-DD')
+            }));
+            return res.json({ resultados: datosFormateados });
+        } else {
+            return res.json({ resultados: [] });
+        }
+    });
 });
 
 /**
