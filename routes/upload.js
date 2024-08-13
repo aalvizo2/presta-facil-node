@@ -39,7 +39,7 @@ Router.post('/upload', (req, res) => {
       const filePath = path.join(__dirname, directory, file.name);
 
       return sharp(file.data)
-        .resize({ width: 1920 }) // Ajusta el tamaño según sea necesario
+        .resize({ width: 920 }) // Ajusta el tamaño según sea necesario
         .jpeg({ quality: 80 }) // Ajusta la calidad según sea necesario
         .toBuffer()
         .then((outputBuffer) => {
