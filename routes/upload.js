@@ -98,7 +98,7 @@ Router.post('/subirDesembolso/:clienteActual', (req, res) => {
 
   // Procesar y mover el archivo al directorio de subida
   sharp(file.data)
-    .resize({ width: 1920 }) // Ajusta el tamaño según sea necesario
+    .resize({ width: 920 }) // Ajusta el tamaño según sea necesario
     .jpeg({ quality: 80 }) // Ajusta la calidad según sea necesario
     .toBuffer()
     .then((outputBuffer) => {
