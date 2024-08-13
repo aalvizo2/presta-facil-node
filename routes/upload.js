@@ -3,7 +3,7 @@ const path = require('path');
 const fs = require('fs');
 const Router = express.Router();
 const fileUpload = require('express-fileupload');
-const sharp = require('sharp'); // Importar sharp para la manipulación de imágenes
+const sharp = require('sharp');
 const connection = require('./db');
 
 Router.use(fileUpload());
