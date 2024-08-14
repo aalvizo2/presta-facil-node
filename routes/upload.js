@@ -3,7 +3,7 @@ const path = require('path');
 const fs = require('fs');
 const Router = express.Router();
 const fileUpload = require('express-fileupload');
-const sharp = require('sharp');
+const Jimp = require('jimp'); // Importar Jimp
 const connection = require('./db');
 
 Router.use(fileUpload());
@@ -16,6 +16,21 @@ Router.use('/pagare', express.static(path.join(__dirname, 'pagare')));
 Router.use('/referencia-familiar', express.static(path.join(__dirname, 'referencia-familiar')));
 Router.use('/referencia-laboral', express.static(path.join(__dirname, 'referencia-laboral')));
 Router.use('/desembolso', express.static(path.join(__dirname, 'desembolso')));
+
+const resizeImage = async (buffer, maxWidth, maxHeight) => {
+  const image = await Jimp.read(buffer);
+  const { width, height } = image.bitmap;
+
+  if (width > maxWidth || height > maxHeight) {
+    if (width > height) {
+      await image.resize(maxWidth, Jimp.AUTO);
+    } else {
+      await image.resize(Jimp.AUTO, maxHeight);
+    }
+  }
+  
+  return image.getBufferAsync(Jimp.MIME_JPEG);
+};
 
 Router.post('/upload', (req, res) => {
   if (!req.files || Object.keys(req.files).length === 0) {
@@ -38,10 +53,7 @@ Router.post('/upload', (req, res) => {
     if (file) {
       const filePath = path.join(__dirname, directory, file.name);
 
-      return sharp(file.data)
-        .resize({ width: 920 }) // Ajusta el tamaño según sea necesario
-        .jpeg({ quality: 80 }) // Ajusta la calidad según sea necesario
-        .toBuffer()
+      return resizeImage(file.data, 900, 900)
         .then((outputBuffer) => {
           // Comprobar si la imagen comprimida es menor de 2MB
           if (outputBuffer.length > 2 * 1024 * 1024) {
@@ -97,10 +109,7 @@ Router.post('/subirDesembolso/:clienteActual', (req, res) => {
   }
 
   // Procesar y mover el archivo al directorio de subida
-  sharp(file.data)
-    .resize({ width: 920 }) // Ajusta el tamaño según sea necesario
-    .jpeg({ quality: 80 }) // Ajusta la calidad según sea necesario
-    .toBuffer()
+  resizeImage(file.data, 900, 900)
     .then((outputBuffer) => {
       // Comprobar si la imagen comprimida es menor de 2MB
       if (outputBuffer.length > 2 * 1024 * 1024) {

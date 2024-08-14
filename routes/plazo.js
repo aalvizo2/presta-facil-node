@@ -85,7 +85,8 @@ Router.get('/datosCliente/:cliente', (req, res) => {
 Router.put('/actualizarEstatus/:cliente', (req, res) => {
     const cliente = req.params.cliente;
     const { estatus, monto, fechaInicio, frecuenciaPago } = req.body;
-    console.log(fechaInicio);
+    console.log('valores enviados')
+    console.log('monto total', req.body);
 
     if (estatus === 'Aprobado') {
         connection.query('UPDATE usuarios SET estado = ? WHERE nombre = ?', [estatus, cliente], (err) => {
@@ -101,14 +102,17 @@ Router.put('/actualizarEstatus/:cliente', (req, res) => {
             const montoActualizado = monto;
             const fechaInicial = moment(fechaInicio, 'D [de] MMMM [del] YYYY', 'es');
             const fechaFormato= fechaInicial.format('YYYY-MM-DD')
-
+            const inicioRango= moment().date(7)
+            const finRango= moment().date(15)
+            const segundoRango= moment().date(23)
+            const segundoRangoFin= moment().date(30)
             console.log('fecha con formato', fechaFormato)
             const hoy = moment();
             let proximoPago;
 
-            if (hoy.date() <= 15) {
-                proximoPago = moment().date(15);
-            } else {
+            if (hoy.isBetween(inicioRango, finRango, 'day', '[]')) {
+                proximoPago = moment().date(30);
+            }else if(hoy.isBetween(segundoRango, segundoRangoFin, 'day', '[]')) {
                 proximoPago = moment().add(1, 'months').date(15);
             }
 
@@ -118,14 +122,17 @@ Router.put('/actualizarEstatus/:cliente', (req, res) => {
                 proximoPago = moment().add(1, 'months').date(15);
             }
 
+            
+
             const diasRestantes = proximoPago.diff(hoy, 'days');
             const interesDiario = (monto * interes) / 15;
             const interesProporcional = interesDiario * diasRestantes;
             const montoRebajado = montoActualizado - interesProporcional;
-            const montoRedondeado= Math.round(montoRebajado)
+            const montoRedondeado= Math.round(monto)
             const pagoMinimoRebajado = interesProporcional;
+            const fechaPago = proximoPago.format('YYYY-MM-DD');
 
-            connection.query('INSERT INTO prestamos (nombre, monto, fechaInicio, frecuenciaPago) VALUES (?,?,?,?)', [cliente, montoRebajado, fechaFormato, frecuenciaPago], (err) => {
+            connection.query('INSERT INTO prestamos (nombre, monto, fechaInicio, frecuenciaPago, fechaPago) VALUES (?,?,?,?, ?)', [cliente, monto, fechaFormato, frecuenciaPago, fechaPago], (err) => {
                 if (err) {
                     console.error('Error insertando datos en prestamos:', err);
                     return res.status(500).send('Error insertando datos en prestamos');
