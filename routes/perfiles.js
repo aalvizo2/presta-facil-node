@@ -69,9 +69,9 @@ Router.get('/get-roles/:user', (req, res)=>{
 })
 
 
-Router.post('/actualizarPago', (req, res) => {
+Router.post('/actualizarPago1', (req, res) => {
   const { nombre, monto, fechaInicio, fechaPago, abono, interes, abonoCapital } = req.body;
-
+   console.log('datos recibidos del front', req.body)
   // Consulta para actualizar el pago
   const updateQuery = 'UPDATE usuarios SET monto = ?, fechaInicio = ?, fechaPago = ? WHERE nombre = ?';
   connection.query(updateQuery, [monto, fechaInicio, fechaPago, nombre], (err) => {
@@ -186,6 +186,17 @@ Router.delete('/eliminarCliente/:nombre', (req, res)=> {
       if(err) throw err 
       res.status(200).send('Exito')
     })
+  })
+})
+
+Router.get('/getRole/:usuario', (req, res) => {
+  console.log('usuario enviado', req.params)
+  const {usuario} = req.params
+
+  connection.query('SELECT role FROM admin WHERE usuario= ?', [usuario], (err, Data) => {
+    if(err) throw err 
+    console.log(Data)
+    res.json({Data: Data[0]})
   })
 })
 

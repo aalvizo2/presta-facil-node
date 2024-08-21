@@ -241,8 +241,9 @@ Router.post('/filtrarCliente', (req, res) => {
 /**
  * Endpoint to update the payment information of a client.
  */
-Router.post('/actualizarPago', (req, res) => {
+Router.post('/actualizarPago1', (req, res) => {
     const { nombre, monto, fechaInicio, fechaPago, abono, interes, abonoCapital } = req.body;
+    console.log('campos recibidos del frontend', req.body)
     if (!nombre || !monto || !fechaInicio || !fechaPago || !abono || !interes || !abonoCapital) {
         return res.status(400).json({ error: "Todos los campos son requeridos" });
     }
