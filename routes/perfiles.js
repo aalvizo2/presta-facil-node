@@ -69,7 +69,7 @@ Router.get('/get-roles/:user', (req, res)=>{
 })
 
 
-Router.post('/actualizarPago1', (req, res) => {
+Router.post('/actualizarPago', (req, res) => {
   const { nombre, monto, fechaInicio, fechaPago, abono, interes, abonoCapital } = req.body;
    console.log('datos recibidos del front', req.body)
   // Consulta para actualizar el pago
