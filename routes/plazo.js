@@ -243,10 +243,10 @@ Router.post('/filtrarCliente', (req, res) => {
  */
 Router.post('/actualizarPago', (req, res) => {
     const { nombre, monto, fechaInicio, fechaPago, abono, interes, abonoCapital } = req.body;
-    console.log('campos recibidos del frontend', req.body)
-    if (!nombre || !monto || !fechaInicio || !fechaPago || !abono || !interes || !abonoCapital) {
+    console.log('campos recibidos del frontend1', req.body)
+    /*if (!nombre || !monto || !fechaInicio || !fechaPago || !abono || !interes || !abonoCapital) {
         return res.status(400).json({ error: "Todos los campos son requeridos" });
-    }
+    }*/
   
     connection.query(
       'UPDATE prestamos SET monto = ?, fechaInicio = ?, fechaPago = ? WHERE nombre = ?', 
