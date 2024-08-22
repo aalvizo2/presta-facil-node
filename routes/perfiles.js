@@ -1,6 +1,7 @@
 const express= require('express')
 const Router= express.Router()
 const connection= require('../routes/db');
+const { emitWarning } = require('process');
 
 Router.get('/check-user/:user', (req, res) => {
     const usuario = req.params.user;
@@ -197,6 +198,46 @@ Router.get('/getRole/:usuario', (req, res) => {
     if(err) throw err 
     console.log(Data)
     res.json({Data: Data[0]})
+  })
+})
+
+
+
+Router.post('/crearSolicitud', (req, res) => {
+  console.log('datos de la solicitud', req.body)
+  const {cliente, monto, fechaInicio, frecuenciaPago, plazo, abono, pagoMinimo}= req.body
+  
+  //Conectamos a la base de datos 
+  connection.query('INSERT INTO solicitudes (nombre, monto, frecuenciaPago, plazo, abono, pagoMinimo) VALUES (?,?,?,?,?,?)', 
+    [
+      cliente,
+      monto, 
+      
+      frecuenciaPago,
+      plazo, 
+      abono,
+      pagoMinimo
+    ], (error) => {
+       if(error) throw error 
+       res.status(200).send({message: 'Operación realizada con éxito'})
+    }
+  )
+})
+
+Router.get('/getSolicitud', (req, res) => {
+  connection.query('SELECT * FROM solicitudes', (err, Data) => {
+    if(err) throw err 
+    res.json({Data: Data})
+    console.log(Data)
+  })
+})
+
+
+Router.delete('/eliminarSolicitud/:id', (req, res) => {
+  const {id} = req.params
+  connection.query('DELETE FROM solicitudes WHERE Id=?', [id], (err) => {
+    if(err) throw err
+    res.status(204).send({message: 'Operación realizada con éxito'})
   })
 })
 
