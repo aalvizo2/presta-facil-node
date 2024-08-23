@@ -1,7 +1,7 @@
 const express= require('express')
 const Router= express.Router()
 const connection= require('../routes/db');
-const { emitWarning } = require('process');
+
 
 Router.get('/check-user/:user', (req, res) => {
     const usuario = req.params.user;

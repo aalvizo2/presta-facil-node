@@ -15,6 +15,7 @@ Router.post('/enviar', (req, res) => {
     const datosLaboralesParsed = JSON.parse(datosLaborales);
     const referenciasData = JSON.parse(referencias).referencias; // Acceder a la propiedad 'referencias'
     const{referenciaFamiliar, referenciaLaboral, formatoReferencias, paga, servicios}= req.body
+    console.log(req.body)
 
     // Desestructurar los datos
     const { nombre, direccion, telefono, colonia, cumple, monto, fechaInicio, frecuenciaPago, plazo, estado } = datosParsed;
@@ -24,24 +25,26 @@ Router.post('/enviar', (req, res) => {
     const nombresReferencias = [];
     const domiciliosReferencias = [];
     const celularesReferencias = [];
+    const parentezcoReferencias = []
 
     // Iterar sobre referenciasData para extraer los datos
     referenciasData.forEach(referencia => {
       nombresReferencias.push(referencia.referencia);
       domiciliosReferencias.push(referencia.referencia_dom);
       celularesReferencias.push(referencia.referencia_cel);
+      parentezcoReferencias.push(referencia.parentezco)
     });
 
     // Preparar la consulta SQL para insertar los datos en la tabla 'usuarios'
     const sql = `INSERT INTO usuarios (
       nombre, direccion, telefono, colonia, cumple, puesto, empresa, antiguedad, sueldo_in, sueldo_final, cedula, carta_laboral, 
-      referencia, referencia_dom, referencia_cel, monto, fechaInicio, frecuenciaPago, plazo, estado
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+      referencia, referencia_dom, referencia_cel,parentezco, monto, fechaInicio, frecuenciaPago, plazo, estado
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
     // Ejecutar la consulta SQL
     connection.query(sql, [
       nombre, direccion, telefono, colonia, cumple, puesto, empresa, antiguedad, sueldo_in, sueldo_final, cedula, cartaLaboral, 
-      JSON.stringify(nombresReferencias), JSON.stringify(domiciliosReferencias), JSON.stringify(celularesReferencias), monto, 
+      JSON.stringify(nombresReferencias), JSON.stringify(domiciliosReferencias), JSON.stringify(celularesReferencias), JSON.stringify(parentezcoReferencias), monto, 
       fechaInicio, frecuenciaPago, plazo, estado
     ], (err, result) => {
       if (err) {

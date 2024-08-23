@@ -142,6 +142,10 @@ Router.put('/actualizarEstatus/:cliente', (req, res) => {
                 connection.query('INSERT INTO caja (total, fecha, nombre, monto) VALUES(?,?,?,?)', [montoRedondeado, fechaInicio, cliente, monto], (error) => {
                     if(err) throw err
                     console.log('monto actualizado', montoRebajado)
+                    connection.query('DELETE FROM solicitudes WHERE nombre= ?', [cliente], (err) => {
+                        if(err) throw err
+                        console.log('Solicitud eliminada correctamente')
+                    })
                 })
                 return res.json({
                     mensaje: 'Datos actualizados correctamente',
@@ -157,7 +161,12 @@ Router.put('/actualizarEstatus/:cliente', (req, res) => {
                 return res.status(500).send('Error actualizando estado');
             }
             console.log('Prestamo Rechazado');
+            connection.query('DELETE FROM solicitudes WHERE nombre=?', [cliente], (err) => {
+                if(err) throw err 
+                console.log('Cliente eliminado correctamente')
+            })
             return res.send('Prestamo Rechazado');
+
         });
     } else {
         return res.status(400).send('Estatus inválido');
