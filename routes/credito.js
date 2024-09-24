@@ -7,7 +7,7 @@ Router.use(express.json()) // Middleware para parsear el cuerpo de la solicitud 
 
 Router.post('/enviar', (req, res) => {
   const { datos, datosLaborales, cedula, cartaLaboral, referencias } = req.body;
-  console.log('datos enviados del front', req.body);
+  //console.log('datos enviados del front', req.body);
 
   try {
     // Parsear los datos JSON
@@ -15,10 +15,10 @@ Router.post('/enviar', (req, res) => {
     const datosLaboralesParsed = JSON.parse(datosLaborales);
     const referenciasData = JSON.parse(referencias).referencias; // Acceder a la propiedad 'referencias'
     const{referenciaFamiliar, referenciaLaboral, formatoReferencias, paga, servicios}= req.body
-    console.log(req.body)
+    //console.log(req.body)
 
     // Desestructurar los datos
-    const { nombre, direccion, telefono, colonia, cumple, monto, fechaInicio, frecuenciaPago, plazo, estado } = datosParsed;
+    const { cedulaNumero, nombre, direccion, telefono, colonia, monto, fechaInicio, frecuenciaPago, plazo, estado } = datosParsed;
     const { puesto, empresa, antiguedad, sueldo_in, sueldo_final } = datosLaboralesParsed;
 
     // Extraer nombres, domicilios y números de teléfono celular de las referencias
@@ -26,6 +26,8 @@ Router.post('/enviar', (req, res) => {
     const domiciliosReferencias = [];
     const celularesReferencias = [];
     const parentezcoReferencias = []
+    const redSocialRef = []
+    const barrio_ref = []
 
     // Iterar sobre referenciasData para extraer los datos
     referenciasData.forEach(referencia => {
@@ -33,31 +35,74 @@ Router.post('/enviar', (req, res) => {
       domiciliosReferencias.push(referencia.referencia_dom);
       celularesReferencias.push(referencia.referencia_cel);
       parentezcoReferencias.push(referencia.parentezco)
+      redSocialRef.push(referencia.redSocialRef)
+      barrio_ref.push(referencia.barrio_ref)
     });
 
-    // Preparar la consulta SQL para insertar los datos en la tabla 'usuarios'
+    // Preparar la consulta SQL para insertar los datos en la tabla 'usuarios'66445
     const sql = `INSERT INTO usuarios (
-      nombre, direccion, telefono, colonia, cumple, puesto, empresa, antiguedad, sueldo_in, sueldo_final, cedula, carta_laboral, 
-      referencia, referencia_dom, referencia_cel,parentezco, monto, fechaInicio, frecuenciaPago, plazo, estado
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+      cedulaNumero,
+      nombre, 
+      direccion, 
+      telefono, 
+      colonia, 
+      puesto, 
+      empresa,
+      antiguedad, 
+      sueldo_in, 
+      sueldo_final, 
+      cedula, 
+      carta_laboral, 
+      referencia, 
+      referencia_dom, 
+      referencia_cel, 
+      parentezco, 
+      redSocialRef, 
+      barrio_ref, 
+      monto, 
+      fechaInicio, 
+      frecuenciaPago, 
+      plazo, 
+      estado
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
     // Ejecutar la consulta SQL
     connection.query(sql, [
-      nombre, direccion, telefono, colonia, cumple, puesto, empresa, antiguedad, sueldo_in, sueldo_final, cedula, cartaLaboral, 
-      JSON.stringify(nombresReferencias), JSON.stringify(domiciliosReferencias), JSON.stringify(celularesReferencias), JSON.stringify(parentezcoReferencias), monto, 
-      fechaInicio, frecuenciaPago, plazo, estado
+      cedulaNumero,
+      nombre, 
+      direccion, 
+      telefono, 
+      colonia, 
+      puesto, 
+      empresa, 
+      antiguedad, 
+      sueldo_in, 
+      sueldo_final, 
+      cedula, 
+      cartaLaboral, 
+      JSON.stringify(nombresReferencias), 
+      JSON.stringify(domiciliosReferencias), 
+      JSON.stringify(celularesReferencias), 
+      JSON.stringify(parentezcoReferencias), 
+      JSON.stringify(redSocialRef), 
+      JSON.stringify(barrio_ref),
+      monto, 
+      fechaInicio, 
+      frecuenciaPago, 
+      plazo, 
+      estado
     ], (err, result) => {
       if (err) {
         console.error('Error al conectar con la base de datos:', err);
         res.status(500).send({ message: 'Error interno del servidor' });
       } else {
-        console.log('Datos insertados correctamente en la base de datos');
+        //console.log('Datos insertados correctamente en la base de datos');
         res.status(200).send({ message: 'Éxito al guardar los datos' });
 
         //second query
         connection.query('INSERT INTO documentos (formato_referencias, pagare, referenciaFamilia, referencia_laboral, servicios,  nombre)VALUES(?,?,?,?,?, ?)', [formatoReferencias, paga, referenciaFamiliar, referenciaLaboral, servicios, nombre], (err)=>{
           if(err) throw err
-          console.log('documentos insertados correctamente')
+          //console.log('documentos insertados correctamente')
         })
       }
     });
@@ -89,7 +134,7 @@ Router.get('/datos', (req,res)=>{
 })
 Router.put('/solicitud', (req, res) => {
   const { nombre, monto, frecuenciaPago, fechaInicio, plazo } = req.body
-  console.log(req.body)
+  //console.log(req.body)
 
   // Convertir el timestamp en una fecha
   const timestamp = 625551470362220; // tu timestamp aquí
@@ -108,7 +153,7 @@ Router.put('/solicitud', (req, res) => {
     day: 'numeric' // día del mes como número
   });
   
-  console.log(fechaLegible);
+  //console.log(fechaLegible);
   connection.query(
     'UPDATE usuarios SET monto=?, frecuenciaPago=?, fechaInicio=?, plazo=? WHERE nombre=?',
     [monto, frecuenciaPago, fechaInicio, plazo,  nombre],
@@ -117,7 +162,7 @@ Router.put('/solicitud', (req, res) => {
         console.error('Error al actualizar los datos:', err);
         res.status(500).json({ error: 'Error interno del servidor' });
       } else {
-        console.log('Datos actualizados correctamente');
+        //console.log('Datos actualizados correctamente');
         res.status(200).json({ message: 'Datos actualizados correctamente' })
         
       }

@@ -23,7 +23,7 @@ Router.get('/datos_prestamo', (req, res) => {
             const prestamo = datos[0];
             const montoOriginal = prestamo.monto;
             const monto = montoOriginal;
-            console.log(monto);
+            //console.log(monto);
             const plazo = prestamo.plazo;
             const fechaInicio = prestamo.fechaInicio;
             const fechaInicial = moment(fechaInicio, 'YYYY-MM-DD');
@@ -53,7 +53,7 @@ Router.get('/datos_prestamo', (req, res) => {
             // Ajusta el monto total y el pago mínimo en base al interés acumulado
             const montoRebajado = monto - interesProporcional;
             const pagoMinimoRebajado = interesProporcional;
-            console.log(montoRebajado);
+            //console.log(montoRebajado);
 
             return res.json({ 
                 datos: datos, 
@@ -85,8 +85,8 @@ Router.get('/datosCliente/:cliente', (req, res) => {
 Router.put('/actualizarEstatus/:cliente', (req, res) => {
     const cliente = req.params.cliente;
     const { estatus, monto, fechaInicio, frecuenciaPago } = req.body;
-    console.log('valores enviados')
-    console.log('monto total', req.body);
+    //console.log('valores enviados')
+    //console.log('monto total', req.body);
 
     if (estatus === 'Aprobado') {
         connection.query('UPDATE usuarios SET estado = ? WHERE nombre = ?', [estatus, cliente], (err) => {
@@ -95,7 +95,7 @@ Router.put('/actualizarEstatus/:cliente', (req, res) => {
                 return res.status(500).send('Error actualizando estado');
             }
 
-            console.log('Estado actualizado correctamente en usuarios');
+            //console.log('Estado actualizado correctamente en usuarios');
 
             // Calcular el monto actualizado
             const interes = 0.1;
@@ -106,7 +106,7 @@ Router.put('/actualizarEstatus/:cliente', (req, res) => {
             const finRango= moment().date(15)
             const segundoRango= moment().date(23)
             const segundoRangoFin= moment().date(30)
-            console.log('fecha con formato', fechaFormato)
+            //console.log('fecha con formato', fechaFormato)
             const hoy = moment();
             let proximoPago;
 
@@ -138,13 +138,13 @@ Router.put('/actualizarEstatus/:cliente', (req, res) => {
                     return res.status(500).send('Error insertando datos en prestamos');
                 }
 
-                console.log('Datos insertados correctamente en prestamos');
+                //console.log('Datos insertados correctamente en prestamos');
                 connection.query('INSERT INTO caja (total, fecha, nombre, monto) VALUES(?,?,?,?)', [montoRedondeado, fechaInicio, cliente, monto], (error) => {
                     if(err) throw err
-                    console.log('monto actualizado', montoRebajado)
+                    //console.log('monto actualizado', montoRebajado)
                     connection.query('DELETE FROM solicitudes WHERE nombre= ?', [cliente], (err) => {
                         if(err) throw err
-                        console.log('Solicitud eliminada correctamente')
+                        //console.log('Solicitud eliminada correctamente')
                     })
                 })
                 return res.json({
@@ -160,10 +160,10 @@ Router.put('/actualizarEstatus/:cliente', (req, res) => {
                 console.error('Error actualizando estado en usuarios:', err);
                 return res.status(500).send('Error actualizando estado');
             }
-            console.log('Prestamo Rechazado');
+            //console.log('Prestamo Rechazado');
             connection.query('DELETE FROM solicitudes WHERE nombre=?', [cliente], (err) => {
                 if(err) throw err 
-                console.log('Cliente eliminado correctamente')
+                //console.log('Cliente eliminado correctamente')
             })
             return res.send('Prestamo Rechazado');
 
@@ -177,7 +177,7 @@ Router.put('/actualizarEstatus/:cliente', (req, res) => {
  * Endpoint to get the list of clients.
  */
 Router.get('/listaClientes', (req, res) => {
-    connection.query('SELECT nombre, estado, fechaInicio FROM usuarios', (err, datos) => {
+    connection.query('SELECT cedulaNumero, nombre, estado, fechaInicio FROM usuarios', (err, datos) => {
         if (err) {
             console.error('Error al buscar clientes:', err);
             return res.status(500).json({ error: 'Error al buscar clientes' });
@@ -252,7 +252,7 @@ Router.post('/filtrarCliente', (req, res) => {
  */
 Router.post('/actualizarPago', (req, res) => {
     const { nombre, monto, fechaInicio, fechaPago, abono, interes, abonoCapital } = req.body;
-    console.log('campos recibidos del frontend1', req.body)
+    //console.log('campos recibidos del frontend1', req.body)
     /*if (!nombre || !monto || !fechaInicio || !fechaPago || !abono || !interes || !abonoCapital) {
         return res.status(400).json({ error: "Todos los campos son requeridos" });
     }*/

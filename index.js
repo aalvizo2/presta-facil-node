@@ -11,7 +11,8 @@ const estadoCuenta = require('./routes/estado-cuenta');
 const movimientos = require('./routes/movimientos');
 const perfiles = require('./routes/perfiles');
 const cobranza = require('./routes/cobranza');
-const gastos = require('./routes/gastos');
+const gastos = require('./routes/gastos')
+const renovaciones= require('./routes/renovaciones')
 
 const app = express();
 
@@ -37,6 +38,7 @@ app.use('/', movimientos);
 app.use('/', perfiles);
 app.use('/', cobranza);
 app.use('/', gastos);
+app.use('/', renovaciones)
 // Ruta de prueba
 app.get('/', (req, res) => {
   res.send('Hola Mundo');

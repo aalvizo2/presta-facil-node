@@ -1,6 +1,6 @@
 const express= require('express')
 const Router = express.Router()
-console.log('hola desde login')
+//console.log('hola desde login')
 const connection= require('./db')
 
 

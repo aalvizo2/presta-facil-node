@@ -13,6 +13,7 @@ const movimientos = require('./routes/movimientos');
 const perfiles = require('./routes/perfiles');
 const cobranza = require('./routes/cobranza');
 const gastos = require('./routes/gastos');
+const renovacion= require('./routes/renovaciones')
 
 const app = express();
 
@@ -40,6 +41,8 @@ app.use('/', movimientos);
 app.use('/', perfiles);
 app.use('/', cobranza);
 app.use('/', gastos);
+app.use('/', renovacion)
+
 
 // Ruta de prueba
 app.get('/', (req, res) => {
@@ -54,13 +57,7 @@ app.get('/keep-alive', (req, res) => {
 // Iniciar el servidor
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
-  console.log(`Servidor ejecutándose en el puerto ${PORT}`);
+  //console.log(`Servidor ejecutándose en el puerto ${PORT}`);
 });
 
-// Mantener el servidor activo en Render
-setInterval(() => {
-  fetch(`http://localhost:${PORT}/keep-alive`)
-    .then(res => res.text())
-    .then(res => console.log(res))
-    .catch(err => console.log('Error keeping alive:', err));
-}, 5 * 60 * 1000); // Cada 5 minutos
+

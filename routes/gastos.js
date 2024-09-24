@@ -21,7 +21,7 @@ Router.get('/mostrarGasto', (req, res)=> {
     connection.query('SELECT * FROM gastos', (err, Data)=> {
         if(err) throw err
         res.status(200).json({Data})
-        console.log(Data)
+        //console.log(Data)
     })
 })
 

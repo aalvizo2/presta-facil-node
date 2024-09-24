@@ -73,7 +73,7 @@ Router.get('/montoPrestamos', (req, res) => {
 
 Router.get('/montoPrestamo/:cliente', (req, res)=> {
    const {cliente}= req.params
-   console.log(cliente)
+   //console.log(cliente)
 
    connection.query('SELECT monto FROM prestamos WHERE nombre=?', [cliente], (err, monto)=>{
      if(err) throw err 

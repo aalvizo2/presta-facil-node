@@ -21,7 +21,7 @@ Router.get('/check-user/:user', (req, res) => {
 
   Router.post('/create-user', (req, res) => {
     const { usuario, pass, role, permisos } = req.body;
-    console.log(req.body);
+    //console.log(req.body);
   
     // Primero verifica si el usuario ya existe
     connection.query('SELECT usuario FROM admin WHERE usuario = ?', [usuario], (err, results) => {
@@ -41,7 +41,7 @@ Router.get('/check-user/:user', (req, res) => {
             res.status(500).send({ message: 'Error al insertar datos' });
             throw err;
           } else {
-            console.log('Datos insertados correctamente');
+            //console.log('Datos insertados correctamente');
             res.status(200).send({ message: 'Operación realizada con éxito' });
           }
         });
@@ -54,7 +54,7 @@ Router.put('/update/:usuario', (req, res)=>{
     const{pass}= req.body
     connection.query('UPDATE admin SET pass=? WHERE usuario=?', [pass, usuario], (err) =>{
         if(err) throw err
-        console.log('contraseña actualizada correctamente')
+        //console.log('contraseña actualizada correctamente')
     })
 })
  
@@ -72,7 +72,7 @@ Router.get('/get-roles/:user', (req, res)=>{
 
 Router.post('/actualizarPago', (req, res) => {
   const { nombre, monto, fechaInicio, fechaPago, abono, interes, abonoCapital } = req.body;
-   console.log('datos recibidos del front', req.body)
+   //console.log('datos recibidos del front', req.body)
   // Consulta para actualizar el pago
   const updateQuery = 'UPDATE usuarios SET monto = ?, fechaInicio = ?, fechaPago = ? WHERE nombre = ?';
   connection.query(updateQuery, [monto, fechaInicio, fechaPago, nombre], (err) => {
@@ -94,7 +94,7 @@ Router.post('/actualizarPago', (req, res) => {
           console.error('Error al registrar la cobranza:', err);
           return res.status(500).json({ error: 'Error al registrar la cobranza' });
         }
-        console.log('Cobranza registrada correctamente');
+        //console.log('Cobranza registrada correctamente');
       });
     }
 
@@ -108,7 +108,7 @@ Router.get('/clienteNombre', (req, res) =>{
       if(err) throw err 
 
       res.status(200).json({Data})
-      console.log(Data)
+      //console.log(Data)
   })
 })
 
@@ -119,9 +119,10 @@ Router.put('/updateCliente', (req, res) => {
   const datos = req.body;
   
   
-  console.log('Datos recibidos para actualizar:', datos);
+  //console.log('Datos recibidos para actualizar:', datos);
 
   const {
+    cedulaNumero,
     nombre,
     direccion,
     telefono,
@@ -141,9 +142,9 @@ Router.put('/updateCliente', (req, res) => {
 
   connection.query(
     `UPDATE usuarios 
-     SET direccion=?, telefono=?, colonia=?, puesto=?, empresa=?, antiguedad=?, sueldo_in=?, sueldo_final=?, nombre=?, redes_sociales=? 
+     SET direccion=?, telefono=?, colonia=?, puesto=?, empresa=?, antiguedad=?, sueldo_in=?, sueldo_final=?, nombre=?, redes_sociales=?, cedulaNumero=?
      WHERE id=?`,
-    [direccion, telefono, colonia, puesto, empresa, antiguedad, sueldo_in, sueldo_final, nombre, redes_sociales, id],
+    [direccion, telefono, colonia, puesto, empresa, antiguedad, sueldo_in, sueldo_final, nombre, redes_sociales, cedulaNumero, id],
     (err, results) => {
       if (err) {
         console.error('Error al actualizar', err);
@@ -167,7 +168,7 @@ Router.put('/updateCliente', (req, res) => {
 });
 
 Router.get('/getImages/:clientName', (req, res)=>{
-  console.log(req.params)
+  //console.log(req.params)
   const{clientName}= req.params
 
 
@@ -191,12 +192,12 @@ Router.delete('/eliminarCliente/:nombre', (req, res)=> {
 })
 
 Router.get('/getRole/:usuario', (req, res) => {
-  console.log('usuario enviado', req.params)
+  //console.log('usuario enviado', req.params)
   const {usuario} = req.params
 
   connection.query('SELECT role FROM admin WHERE usuario= ?', [usuario], (err, Data) => {
     if(err) throw err 
-    console.log(Data)
+    //console.log(Data)
     res.json({Data: Data[0]})
   })
 })
@@ -204,19 +205,19 @@ Router.get('/getRole/:usuario', (req, res) => {
 
 
 Router.post('/crearSolicitud', (req, res) => {
-  console.log('datos de la solicitud', req.body)
+  //console.log('datos de la solicitud', req.body)
   const {cliente, monto, fechaInicio, frecuenciaPago, plazo, abono, pagoMinimo}= req.body
   
-  //Conectamos a la base de datos 
-  connection.query('INSERT INTO solicitudes (nombre, monto, frecuenciaPago, plazo, abono, pagoMinimo) VALUES (?,?,?,?,?,?)', 
+  //Conectamos a la base de datos {{}}
+  connection.query('INSERT INTO solicitudes (nombre, monto, frecuenciaPago, plazo, abono, pagoMinimo, fechaInicio) VALUES (?,?,?,?,?,?,?)', 
     [
       cliente,
       monto, 
-      
       frecuenciaPago,
       plazo, 
       abono,
-      pagoMinimo
+      pagoMinimo,
+      fechaInicio
     ], (error) => {
        if(error) throw error 
        res.status(200).send({message: 'Operación realizada con éxito'})
@@ -228,7 +229,7 @@ Router.get('/getSolicitud', (req, res) => {
   connection.query('SELECT * FROM solicitudes', (err, Data) => {
     if(err) throw err 
     res.json({Data: Data})
-    console.log(Data)
+    //console.log(Data)
   })
 })
 

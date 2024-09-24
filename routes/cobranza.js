@@ -36,7 +36,7 @@ Router.get('/cobranza', (req, res) => {
                                     console.error('Error al registrar la cobranza:', err)
                                     return reject(err)
                                 }
-                                console.log('Cobranza registrada correctamente')
+                                //console.log('Cobranza registrada correctamente')
                                 resolve()
                             });
                         } else {
